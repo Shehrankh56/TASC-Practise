@@ -75,7 +75,7 @@ void createMapping(int inOrder[], int size, unordered_map<int,int>& valueToIndex
         valueToIndex[element]=index;
     }
 }
-Node* constructTreeFromPreAndInorder(int preOrder[], int& preIndex, int size, int inOrder[], int inOrderStart, int inOrderEnd){
+Node* constructTreeFromPreAndInorder(unordered_map<int,int>& valueToIndex, int preOrder[], int& preIndex, int size, int inOrder[], int inOrderStart, int inOrderEnd){
 
     //Base Case
     if(preIndex >= size || inOrderStart > inOrderEnd){
@@ -89,10 +89,10 @@ Node* constructTreeFromPreAndInorder(int preOrder[], int& preIndex, int size, in
 
     Node* root = new Node(element);
 
-    int position=searchInInorder(inOrder, size, element);
+    int position=valueToIndex[element];
 
-    root->left = constructTreeFromPreAndInorder(preOrder, preIndex, size, inOrder, inOrderStart, position-1);
-    root->right = constructTreeFromPreAndInorder(preOrder, preIndex, size, inOrder, position+1, inOrderEnd);
+    root->left = constructTreeFromPreAndInorder(valueToIndex,preOrder, preIndex, size, inOrder, inOrderStart, position-1);
+    root->right = constructTreeFromPreAndInorder(valueToIndex, preOrder, preIndex, size, inOrder, position+1, inOrderEnd);
 
     return root;
 }
@@ -109,7 +109,7 @@ int main(){
     unordered_map<int,int>valueToIndex;
     createMapping(inOrder,size , valueToIndex);
 
-    Node* root = constructTreeFromPreAndInorder(preOrder, preIndex, size, inOrder, inOrderStart, inOrderEnd);
+    Node* root = constructTreeFromPreAndInorder(valueToIndex, preOrder, preIndex, size, inOrder, inOrderStart, inOrderEnd);
     cout << "Printing Entire Tree:"<<endl;
     LevelOrderTraversal(root);
     return 0;
