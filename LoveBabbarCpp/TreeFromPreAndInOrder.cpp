@@ -97,19 +97,44 @@ Node* constructTreeFromPreAndInorder(unordered_map<int,int>& valueToIndex, int p
     return root;
 }
 
+Node* constructTreeFromPostAndInorder(unordered_map<int,int>& valueToIndex, int postOrder[], int& postIndex, int size, int inOrder[], int inOrderStart, int inOrderEnd){
+
+    //Base Case
+    if(postIndex < 0 || inOrderStart > inOrderEnd){
+        return NULL;
+    }
+
+    //1 case me solve krunga baki recursion krega 
+
+    int element = postOrder[postIndex];
+    postIndex--;
+
+    Node* root = new Node(element);
+
+    int position=valueToIndex[element];
+
+    root->right = constructTreeFromPostAndInorder(valueToIndex, postOrder, postIndex, size, inOrder, position+1, inOrderEnd);
+    root->left = constructTreeFromPostAndInorder(valueToIndex,postOrder, postIndex, size, inOrder, inOrderStart, position-1);
+
+    return root;
+}
+
 int main(){
 
     int preOrder[]={2,8,10,6,4,12};
     int preIndex=0;
+    int postOrder[]={8,6,14,4,10,2};
+    int postIndex=5;
     int size=6;
-    int inOrder[]={10,8,6,2,4,12};
+    int inOrder[]={8,14,6,2,10,4};
     int inOrderStart=0;
     int inOrderEnd=size-1;
 
     unordered_map<int,int>valueToIndex;
     createMapping(inOrder,size , valueToIndex);
 
-    Node* root = constructTreeFromPreAndInorder(valueToIndex, preOrder, preIndex, size, inOrder, inOrderStart, inOrderEnd);
+    //Node* root = constructTreeFromPreAndInorder(valueToIndex, preOrder, preIndex, size, inOrder, inOrderStart, inOrderEnd);
+    Node* root=constructTreeFromPostAndInorder(valueToIndex, postOrder, postIndex, size, inOrder, inOrderStart, inOrderEnd);
     cout << "Printing Entire Tree:"<<endl;
     LevelOrderTraversal(root);
     return 0;
