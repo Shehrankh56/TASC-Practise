@@ -67,6 +67,14 @@ int searchInInorder(int inOrder[], int size, int target){
     }
     return -1;
 }
+
+void createMapping(int inOrder[], int size, unordered_map<int,int>& valueToIndex){
+    for(int i=0; i< size; i++){
+        int element=inOrder[i];
+        int index=i;
+        valueToIndex[element]=index;
+    }
+}
 Node* constructTreeFromPreAndInorder(int preOrder[], int& preIndex, int size, int inOrder[], int inOrderStart, int inOrderEnd){
 
     //Base Case
@@ -97,6 +105,9 @@ int main(){
     int inOrder[]={10,8,6,2,4,12};
     int inOrderStart=0;
     int inOrderEnd=size-1;
+
+    unordered_map<int,int>valueToIndex;
+    createMapping(inOrder,size , valueToIndex);
 
     Node* root = constructTreeFromPreAndInorder(preOrder, preIndex, size, inOrder, inOrderStart, inOrderEnd);
     cout << "Printing Entire Tree:"<<endl;
